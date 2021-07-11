@@ -1,12 +1,14 @@
 ﻿#include "SudokuGame.h"
-#define SIZE_H 1920
-#define SIZE_V 1080
+
 
 RenderWindow window(VideoMode(SIZE_H, SIZE_V), "Sudoku", Style::Close);
 
 void SudokuGame::menu()
 {
 	//window.setFramerateLimit(60);
+	Texture backgroundTexture;
+	backgroundTexture.loadFromFile("Background.jpg");
+	Sprite background(backgroundTexture);
 	Text title("Sudoku", font, 80);
 	title.setStyle(Text::Bold);
 
@@ -14,16 +16,16 @@ void SudokuGame::menu()
 
 	const int numWords = 2;
 
-	Text tekst[numWords];
+	Text textMenu[numWords];
 
 	std::string str[] = { "Play", "Exit" };
 	for (int i = 0; i < numWords; i++)
 	{
-		tekst[i].setFont(font);
-		tekst[i].setCharacterSize(65);
+		textMenu[i].setFont(font);
+		textMenu[i].setCharacterSize(65);
 
-		tekst[i].setString(str[i]);
-		tekst[i].setPosition(SIZE_H / 2 - tekst[i].getGlobalBounds().width / 2, 200 + i * 120);
+		textMenu[i].setString(str[i]);
+		textMenu[i].setPosition(SIZE_H / 2 - textMenu[i].getGlobalBounds().width / 2, 200 + i * 120);
 	}
 
 	while (state == GameState::MENU)
@@ -39,29 +41,29 @@ void SudokuGame::menu()
 				state = GameState::END;
 
 		                                     
-			else if (tekst[0].getGlobalBounds().contains(mouse) &&
+			else if (textMenu[0].getGlobalBounds().contains(mouse) &&
 				event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				state = GameState::GAME;
 			}
 
 			
-			else if (tekst[1].getGlobalBounds().contains(mouse) &&
+			else if (textMenu[1].getGlobalBounds().contains(mouse) &&
 				event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				state = GameState::END;
 			}
 		}
 		for (int i = 0; i < numWords; i++)
-			if (tekst[i].getGlobalBounds().contains(mouse))
-				tekst[i].setFillColor(Color::Red);
-			else tekst[i].setFillColor(Color::White);
+			if (textMenu[i].getGlobalBounds().contains(mouse))
+				textMenu[i].setFillColor(Color::Red);
+			else textMenu[i].setFillColor(Color::White);
 
 		window.clear();
-
+		window.draw(background);
 		window.draw(title);
 		for (int i = 0; i < numWords; i++)
-			window.draw(tekst[i]);
+			window.draw(textMenu[i]);
 
 		window.display();
 	}
@@ -69,11 +71,14 @@ void SudokuGame::menu()
 
 void SudokuGame::levels()
 {
-	sf::Text title(L"Уровень сложности", font, 90);
+	Texture backgroundTexture;
+	backgroundTexture.loadFromFile("Background.jpg");
+	Sprite background(backgroundTexture);
+	Text title(L"Уровень сложности", font, 90);
 	title.setStyle(sf::Text::Bold);
 
 	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 30);
-	title.setStyle(sf::Text::Bold);
+	title.setStyle(Text::Bold);
 
 	std::string easy, medium, hard;
 	const int numberWords = 4;
@@ -93,13 +98,13 @@ void SudokuGame::levels()
 
 	while (state == GameState::GAME && window.isOpen())
 	{
-		Vector2f mouse(sf::Mouse::getPosition(window));
+		Vector2f mouse(Mouse::getPosition(window));
 		Event event;
 		SudokuEngine engine;
 
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == Event::Closed)
 				window.close();
 
 			if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
@@ -110,7 +115,7 @@ void SudokuGame::levels()
 					state = GameState::MENU;
 			}
 
-			else if (text[1].getGlobalBounds().contains(mouse) && event.type == sf::Event::MouseButtonReleased && event.key.code == sf::Mouse::Left)
+			else if (text[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				if (engine.runEngine(window, 1))
 					state = GameState::GAME;
@@ -118,7 +123,7 @@ void SudokuGame::levels()
 					state = GameState::MENU;
 			}
 
-			else if (text[2].getGlobalBounds().contains(mouse) && event.type == sf::Event::MouseButtonReleased && event.key.code == sf::Mouse::Left)
+			else if (text[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				if (engine.runEngine(window, 2))
 					state = GameState::GAME;
@@ -126,7 +131,7 @@ void SudokuGame::levels()
 					state = GameState::MENU;
 			}
 
-			else if (text[3].getGlobalBounds().contains(mouse) && event.type == sf::Event::MouseButtonReleased && event.key.code == sf::Mouse::Left)
+			else if (text[3].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				state = GameState::MENU;
 			}
@@ -139,6 +144,7 @@ void SudokuGame::levels()
 
 
 		window.clear();
+		window.draw(background);
 		window.draw(title);
 		for (int i = 0; i < numberWords; i++)
 			window.draw(text[i]);

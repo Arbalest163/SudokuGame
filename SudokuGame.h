@@ -4,7 +4,8 @@
 #include<time.h>
 #include<Windows.h>
 #include "SudookuEngine.h"
-
+#define SIZE_H 1920
+#define SIZE_V 1080
 
 using namespace sf;
 
@@ -19,10 +20,12 @@ private:
 	GameState state;
 	void levels();
 	void menu();
+
 public:
 	SudokuGame();
 	~SudokuGame();
 	void runGame();
+
 
 };
 

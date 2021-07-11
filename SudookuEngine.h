@@ -2,31 +2,23 @@
 #include<vector>
 #include "SudokuGame.h"
 #include<string>
-
-
 #define SIZE 9
 using namespace sf;
+
 enum class EngineState {GAME, GAMEOVER};
-
-
-class Input {
-public:
-	int intValue;
-	std::string stringValue;
-	Text cell;
-	Input();
-};
 
 class SudokuEngine {
 	int** sudokuLogic;
 	int** sudokuView;
 	bool** sudokuPlayer;
+	int** numberCursorMouse;
 	std::vector<int> vector{ 1,2,3,4,5,6,7,8,9 };
 	int positionCursor;
+	Vector2i posMouse;
 	Font font;
 	EngineState engineState;
 	int cellSize, fontSize;
-	Input input;
+	//Input input;
 public:
 	SudokuEngine();
 	void transposing();
@@ -36,7 +28,8 @@ public:
 	void flipGorizontaly();
 	void flipVerticaly();
 	bool CheckStep();
-	bool runEngine(RenderWindow& _window, int level);
+	void setDifficulty(int difficulty);
+	bool runEngine(RenderWindow& _window, int difficulty);
 	void drawSquare(RenderWindow& window);
 	void selectCell();
 	bool checkRow(int row, int value);
