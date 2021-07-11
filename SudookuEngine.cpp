@@ -34,17 +34,17 @@ SudokuEngine::SudokuEngine()
 		if (i == 8) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		for (int j{ 0 }, v{ 0 }; j < SIZE; j++, v++, k++) {
 			sudokuLogic[i][j] = vector[v];
-			sudokuView[i][j] = vector[v];
+			sudokuView[i][j] = 0;
 			sudokuPlayer[i][j] = true;
 			numberCursorMouse[i][j] = k;
 		}
 	}
 }
 void SudokuEngine::transposing() {
-	SudokuEngine tmp;
+
 	for (int i{ 0 }; i < SIZE; ++i) {
 		for (int j{ 0 }; j < SIZE; j++) {
-			sudokuLogic[i][j] = tmp.sudokuLogic[j][i];
+			std::swap(sudokuLogic[i][j], sudokuLogic[j][i]);
 		}
 	}
 }
@@ -81,13 +81,16 @@ void SudokuEngine::flipVerticaly() {
 	}
 }
 void SudokuEngine::gameRandom() {
-	for (int random_value{ rand() % 100 }; random_value > 0; random_value--) {
+	for (int random_value{ 9 + rand() % 100 }; random_value > 0; random_value--) {
 		transposing();
 		flipGorizontaly();
 		flipVerticaly();
 		swapColumn();
 		swapRow();
 	}
+	for (int i{ 0 }; i < SIZE; ++i)
+		for (int j{ 0 }; j < SIZE; j++)
+			sudokuView[i][j] = sudokuLogic[i][j];
 }
 
 bool SudokuEngine::CheckStep() {

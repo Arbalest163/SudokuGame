@@ -11,8 +11,6 @@ using namespace sf;
 
 enum class GameState { MENU, GAME, END };
 
-
-
 class SudokuGame
 {
 private: 

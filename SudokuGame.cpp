@@ -3,31 +3,40 @@
 
 RenderWindow window(VideoMode(SIZE_H, SIZE_V), "Sudoku", Style::Close);
 
+
+SudokuGame::SudokuGame()
+{
+	//state = GameState::END;
+
+	font.loadFromFile("Black-Acute.ttf");
+
+
+	state = GameState::MENU;
+}
+
+
+SudokuGame::~SudokuGame()
+{
+}
 void SudokuGame::menu()
 {
 	//window.setFramerateLimit(60);
 	Texture backgroundTexture;
 	backgroundTexture.loadFromFile("Background.jpg");
 	Sprite background(backgroundTexture);
-	Text title("Sudoku", font, 80);
+	Text title(L"Судоку", font, 80);
 	title.setStyle(Text::Bold);
-
 	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 60);
-
 	const int numWords = 2;
-
 	Text textMenu[numWords];
-
-	std::string str[] = { "Play", "Exit" };
+	textMenu[0].setString(L"Игра");
+	textMenu[1].setString(L"Выход");
 	for (int i = 0; i < numWords; i++)
 	{
 		textMenu[i].setFont(font);
 		textMenu[i].setCharacterSize(65);
-
-		textMenu[i].setString(str[i]);
 		textMenu[i].setPosition(SIZE_H / 2 - textMenu[i].getGlobalBounds().width / 2, 200 + i * 120);
 	}
-
 	while (state == GameState::MENU)
 	{
 		Vector2f mouse(Mouse::getPosition(window));
@@ -58,13 +67,11 @@ void SudokuGame::menu()
 			if (textMenu[i].getGlobalBounds().contains(mouse))
 				textMenu[i].setFillColor(Color::Red);
 			else textMenu[i].setFillColor(Color::White);
-
 		window.clear();
 		window.draw(background);
 		window.draw(title);
 		for (int i = 0; i < numWords; i++)
 			window.draw(textMenu[i]);
-
 		window.display();
 	}
 }
@@ -75,14 +82,11 @@ void SudokuGame::levels()
 	backgroundTexture.loadFromFile("Background.jpg");
 	Sprite background(backgroundTexture);
 	Text title(L"Уровень сложности", font, 90);
-	title.setStyle(sf::Text::Bold);
-
+	title.setStyle(Text::Bold);
 	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 30);
 	title.setStyle(Text::Bold);
-
 	std::string easy, medium, hard;
 	const int numberWords = 4;
-
 	Text text[numberWords];
 	text[0].setString(L"Лёгкий");
 	text[1].setString(L"Средний");
@@ -152,20 +156,6 @@ void SudokuGame::levels()
 	}
 }
 
-SudokuGame::SudokuGame()
-{
-	state = GameState::END;
-
-	if (!font.loadFromFile("Black-Acute.ttf"))
-		return;
-
-	state = GameState::MENU;
-}
-
-
-SudokuGame::~SudokuGame()
-{
-}
 
 void SudokuGame::runGame()
 {
