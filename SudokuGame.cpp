@@ -47,11 +47,22 @@ void SudokuGame::mainMenu()
 
 		while (window.pollEvent(event))
 		{
-			
 			if (event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
 				state = GameState::END;
-                 
-			else if (textMenu[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+                
+			for (int i{ 0 }; i < numWords; i++) 
+			{
+				if (textMenu[i].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+				{
+					if(i == 0) state = GameState::GAME;
+					if(i == 1) state = GameState::END;
+					if(i == 2) state = GameState::DEVELOPER;
+				}
+
+			}
+			// Проверить цикл выше и удалить лишнее снизу, если всё работает
+
+			/*else if (textMenu[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				state = GameState::GAME;
 			}
@@ -62,9 +73,8 @@ void SudokuGame::mainMenu()
 			else if (textMenu[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				state = GameState::DEVELOPER;
-			}
+			}*/
 		}
-		
 		window.display();
 	}
 }
@@ -155,7 +165,25 @@ void SudokuGame::levels()
 			if (event.type == Event::Closed) {
 				state = GameState::END;
 			}
-			if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			// Цикл выбора уровня сложности и запуск движка
+			for (int i{ 0 }; i < numberWords; i++) {
+				if ((i == numberWords - 1) && text[i].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased
+					&& event.key.code == Mouse::Left || Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					state = GameState::MENU;
+				}
+				else if (text[i].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+				{
+					if (engine.runEngine(window, i)) // Запуск движка тут
+						state = GameState::END;
+					else
+						state = GameState::MENU;
+				}
+
+			}
+			// Проверить цикл выше и удалить лишнее, если все нормально
+
+			/*if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
 			{
 				if (engine.runEngine(window, 0))
 					state = GameState::END;
@@ -180,7 +208,7 @@ void SudokuGame::levels()
 					&& event.key.code == Mouse::Left || Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				state = GameState::MENU;
-			}
+			}*/
 		}
 		window.display(); // Отображение всего, что было отрисовано в процессе работы цикла
 	}

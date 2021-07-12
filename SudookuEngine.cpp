@@ -148,6 +148,9 @@ void SudokuEngine::setDifficulty(int difficulty)
 	case 2:
 		amount = 4;
 		break;
+	default: 
+		amount = 1;
+		break;
 	}
 	int numberCells = SIZE * SIZE;
 	int deleted = numberCells - numberCells / amount;
@@ -208,6 +211,16 @@ bool SudokuEngine::checkSquare(int row, int col, int value) {
 		}
 	}
 	return true;
+}
+
+bool SudokuEngine::checkCorrectInput(int row, int col, int value)
+{
+	if (value == 0) return true;
+	if (checkColumn(col, value) && checkRow(row, value) && checkSquare(row, col, value))
+	{
+		return true;
+	}
+	return false;
 }
 
 void SudokuEngine::drawSquare(RenderWindow& window)
@@ -357,45 +370,75 @@ void SudokuEngine::selectCell()
 	}
 	if (!sudokuPlayer[positionCursor / SIZE][positionCursor % SIZE])
 	{
+		
+		
+
 		if (Keyboard::isKeyPressed(Keyboard::Num0) || Keyboard::isKeyPressed(Keyboard::Numpad0))
 		{
 			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 0;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num1) || Keyboard::isKeyPressed(Keyboard::Numpad1))
 		{
-			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 1;
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 1))
+			{
+				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 1;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num2) || Keyboard::isKeyPressed(Keyboard::Numpad2))
 		{
-			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 2;
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 2))
+			{
+				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 2;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num3) || Keyboard::isKeyPressed(Keyboard::Numpad3))
 		{
-			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 3;
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 3))
+			{
+				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 3;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num4) || Keyboard::isKeyPressed(Keyboard::Numpad4))
 		{
-			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 4;
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 4))
+			{
+				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 4;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num5) || Keyboard::isKeyPressed(Keyboard::Numpad5))
 		{
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 5))
+			{
 				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 5;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num6) || Keyboard::isKeyPressed(Keyboard::Numpad6))
 		{
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 6))
+			{
 				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 6;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num7) || Keyboard::isKeyPressed(Keyboard::Numpad7))
 		{
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 7))
+			{
 				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 7;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num8) || Keyboard::isKeyPressed(Keyboard::Numpad8))
 		{
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 8))
+			{
 				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 8;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num9) || Keyboard::isKeyPressed(Keyboard::Numpad9))
 		{
-			sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 9;
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 9))
+			{
+				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 9;
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::BackSpace))
 		{

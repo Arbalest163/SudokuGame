@@ -34,6 +34,7 @@ public:
 	bool checkRow(int row, int value); // проверка строки
 	bool checkColumn(int col, int value); // проверка колонки
 	bool checkSquare(int row, int col, int value); // проверка квадрата
+	bool checkCorrectInput(int row, int col, int value); // Проверка корректности воода
 private:
 	void transposing(); // транспонирование поля
 	void swapColumn(); // смена колонок в пределах одной группы
