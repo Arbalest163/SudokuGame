@@ -225,22 +225,22 @@ bool SudokuEngine::checkCorrectInput(int row, int col, int value)
 
 void SudokuEngine::drawSquare(RenderWindow& window)
 {
-	int quadx = 3, quady = 3;
+	int quadx = 3, quady = 3; //  оличство €чеек в квадрате
 
-	RectangleShape mediumSquare;
+	RectangleShape mediumSquare; // —редн€€ €чейка
 	mediumSquare.setSize(Vector2f(cellSize * quadx, cellSize * quady));
 	mediumSquare.setOutlineThickness(5);
 	mediumSquare.setOutlineColor(Color::Red);
 	mediumSquare.setFillColor(Color::Transparent);
 
-	RectangleShape bigSquare;
+	RectangleShape bigSquare; // Ѕольша€ €чейка
 	bigSquare.setSize(Vector2f(cellSize * SIZE, cellSize * SIZE));
 	bigSquare.setOutlineThickness(10);
 	bigSquare.setOutlineColor(Color::Yellow);
 	bigSquare.setFillColor(Color::Transparent);
 	bigSquare.setPosition(cellSize, cellSize);
 
-	RectangleShape smallSquare;
+	RectangleShape smallSquare; // ћаленька€ €чейка
 	smallSquare.setSize(Vector2f(cellSize, cellSize));
 	smallSquare.setOutlineThickness(1);
 	smallSquare.setOutlineColor(Color::White);
@@ -250,14 +250,14 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 	{
 		for (int j = 0; j < SIZE; j++)
 		{
-			std::string text;
+			std::string stringValue;
 			if (sudokuView[i][j] > 0)
 			{
-				text = std::to_string(sudokuView[i][j]);
+				stringValue = std::to_string(sudokuView[i][j]);
 			}
 			else
 			{
-				text = "";
+				stringValue = "";
 			}
 			if (j == positionCursor % SIZE && i == positionCursor / SIZE)
 			{
@@ -266,7 +266,7 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 			smallSquare.setPosition(cellSize + j * cellSize, cellSize + i * cellSize);
 			window.draw(smallSquare);
 			smallSquare.setFillColor(Color::Transparent);
-			Text cellText(text, font, fontSize);
+			Text cellText(stringValue, font, fontSize);
 			cellText.setPosition(cellSize + j * cellSize + fontSize/2, cellSize + i * cellSize + fontSize/2);
 			if (sudokuPlayer[i][j])
 			{
