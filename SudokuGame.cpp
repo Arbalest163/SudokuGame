@@ -6,31 +6,25 @@ RenderWindow window(VideoMode(SIZE_H, SIZE_V), "Sudoku", Style::Close);
 
 SudokuGame::SudokuGame()
 {
-	//state = GameState::END;
-
 	font.loadFromFile("Black-Acute.ttf");
-
-
 	state = GameState::MENU;
+	backgroundTexture.loadFromFile("Background.jpg");
+	background.setTexture(backgroundTexture);
 }
-
-
 SudokuGame::~SudokuGame()
 {
 }
-void SudokuGame::menu()
+void SudokuGame::mainMenu()
 {
 	//window.setFramerateLimit(60);
-	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("Background.jpg");
-	Sprite background(backgroundTexture);
 	Text title(L"Судоку", font, 80);
 	title.setStyle(Text::Bold);
 	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 60);
-	const int numWords = 2;
+	const int numWords = 3;
 	Text textMenu[numWords];
 	textMenu[0].setString(L"Игра");
 	textMenu[1].setString(L"Выход");
+	textMenu[2].setString(L"Разработчик");
 	for (int i = 0; i < numWords; i++)
 	{
 		textMenu[i].setFont(font);
@@ -41,28 +35,6 @@ void SudokuGame::menu()
 	{
 		Vector2f mouse(Mouse::getPosition(window));
 		Event event;
-
-		while (window.pollEvent(event))
-		{
-			
-			if (event.type == Event::Closed || event.type == Event::KeyPressed &&
-				event.key.code == Keyboard::Escape)
-				state = GameState::END;
-
-		                                     
-			else if (textMenu[0].getGlobalBounds().contains(mouse) &&
-				event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::GAME;
-			}
-
-			
-			else if (textMenu[1].getGlobalBounds().contains(mouse) &&
-				event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::END;
-			}
-		}
 		for (int i = 0; i < numWords; i++)
 			if (textMenu[i].getGlobalBounds().contains(mouse))
 				textMenu[i].setFillColor(Color::Red);
@@ -72,90 +44,147 @@ void SudokuGame::menu()
 		window.draw(title);
 		for (int i = 0; i < numWords; i++)
 			window.draw(textMenu[i]);
+
+		while (window.pollEvent(event))
+		{
+			
+			if (event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
+				state = GameState::END;
+                 
+			else if (textMenu[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				state = GameState::GAME;
+			}
+			else if (textMenu[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				state = GameState::END;
+			}
+			else if (textMenu[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				state = GameState::DEVELOPER;
+			}
+		}
+		
+		window.display();
+	}
+}
+
+void SudokuGame::developer()
+{
+	//window.setFramerateLimit(60);
+	Text title(L"Разработчик", font, 80);
+	title.setStyle(Text::Bold);
+	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 60);
+	const int numWords = 2;
+	Text textMenu[numWords];
+	textMenu[0].setString(L"Иван Гилязов");
+	textMenu[1].setString(L"Вернуться");
+	for (int i = 0; i < numWords; i++)
+	{
+		textMenu[i].setFont(font);
+		textMenu[i].setCharacterSize(65);
+		textMenu[i].setPosition(SIZE_H / 2 - textMenu[i].getGlobalBounds().width / 2, 200 + i * 120);
+	}
+	while (state == GameState::DEVELOPER)
+	{
+		Vector2f mouse(Mouse::getPosition(window));
+		Event event;
+		if (textMenu[1].getGlobalBounds().contains(mouse))
+			textMenu[1].setFillColor(Color::Red);
+		else textMenu[1].setFillColor(Color::White);
+		window.clear();
+		window.draw(background);
+		window.draw(title);
+		for (int i = 0; i < numWords; i++)
+			window.draw(textMenu[i]);
+
+		while (window.pollEvent(event))
+		{
+
+			if (event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
+				state = GameState::END;
+
+			else if (textMenu[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased 
+					&& event.key.code == Mouse::Left || Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				state = GameState::MENU;
+			}
+		}
 		window.display();
 	}
 }
 
 void SudokuGame::levels()
 {
-	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("Background.jpg");
-	Sprite background(backgroundTexture);
-	Text title(L"Уровень сложности", font, 90);
-	title.setStyle(Text::Bold);
-	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 30);
-	title.setStyle(Text::Bold);
-	std::string easy, medium, hard;
-	const int numberWords = 4;
-	Text text[numberWords];
+	//window.setFramerateLimit(60); // Ограничение частоты кадров монитора
+	SudokuEngine engine; // Создание движка игры
+	Text title(L"Уровень сложности", font, 90); // Текст заголовка
+	title.setStyle(Text::Bold); // Стиль заголовка
+	title.setPosition(SIZE_H / 2 - title.getGlobalBounds().width / 2, 30); // Установка позиции заголовка
+	const int numberWords = 4; // Количество слов меню
+	Text text[numberWords]; // Массив текста меню
 	text[0].setString(L"Лёгкий");
 	text[1].setString(L"Средний");
 	text[2].setString(L"Сложный");
 	text[3].setString(L"Вернуться");
-
 	for (int i = 0; i < numberWords; i++)
 	{
 		text[i].setFont(font);
 		text[i].setCharacterSize(65);
 		text[i].setPosition(SIZE_H / 2 - text[i].getGlobalBounds().width / 2, 150 + i * 120);
 	}
-
-	while (state == GameState::GAME && window.isOpen())
+	// Цикл активен пока статус игры GAME
+	while (state == GameState::GAME)
 	{
 		Vector2f mouse(Mouse::getPosition(window));
 		Event event;
-		SudokuEngine engine;
-
-		while (window.pollEvent(event))
-		{
-			if (event.type == Event::Closed)
-				window.close();
-
-			if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 0))
-					state = GameState::GAME;
-				else
-					state = GameState::MENU;
-			}
-
-			else if (text[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 1))
-					state = GameState::GAME;
-				else
-					state = GameState::MENU;
-			}
-
-			else if (text[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 2))
-					state = GameState::GAME;
-				else
-					state = GameState::MENU;
-			}
-
-			else if (text[3].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::MENU;
-			}
-		}
-
+	
 		for (int i = 0; i < numberWords; i++)
 			if (text[i].getGlobalBounds().contains(mouse))
 				text[i].setFillColor(Color::Red);
 			else text[i].setFillColor(Color::White);
-
-
 		window.clear();
 		window.draw(background);
 		window.draw(title);
-		for (int i = 0; i < numberWords; i++)
+		for (int i = 0; i < numberWords; i++) {
 			window.draw(text[i]);
-		window.display();
+		}
+		// Цикл отслеживания нажатий
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed) {
+				state = GameState::END;
+			}
+			if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				if (engine.runEngine(window, 0))
+					state = GameState::END;
+				else
+					state = GameState::MENU;
+			}
+			else if (text[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				if (engine.runEngine(window, 1))
+					state = GameState::END;
+				else
+					state = GameState::MENU;
+			}
+			else if (text[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
+			{
+				if (engine.runEngine(window, 2))
+					state = GameState::END;
+				else
+					state = GameState::MENU;
+			}
+			else if (text[3].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased 
+					&& event.key.code == Mouse::Left || Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				state = GameState::MENU;
+			}
+		}
+		window.display(); // Отображение всего, что было отрисовано в процессе работы цикла
 	}
 }
-
 
 void SudokuGame::runGame()
 {
@@ -164,10 +193,13 @@ void SudokuGame::runGame()
 		switch (state)
 		{
 		case GameState::MENU:
-			menu();
+			mainMenu();
 			break;
 		case GameState::GAME:
 			levels();
+			break;
+		case GameState::DEVELOPER:
+			developer();
 			break;
 		}
 	}

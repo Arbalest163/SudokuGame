@@ -5,6 +5,8 @@ SudokuEngine::SudokuEngine()
 {
 	engineState = EngineState::GAME;
 	font.loadFromFile("Black-Acute.ttf");
+	backgroundTexture.loadFromFile("Background.jpg");
+	background.setTexture(backgroundTexture);
 	sudokuLogic = new int* [SIZE];
 	sudokuView = new int* [SIZE];
 	sudokuPlayer = new bool* [SIZE];
@@ -24,14 +26,16 @@ SudokuEngine::SudokuEngine()
 		}
 	}
 	for (int i{ 0 },k{0}; i < SIZE; ++i) {
-		if (i == 1) rotate(vector.begin(), vector.begin() + 3, vector.end());
+		if (i % 3 > 0) rotate(vector.begin(), vector.begin() + 3, vector.end());
+		if (!(i % 3)) rotate(vector.begin(), vector.begin() + 4, vector.end());
+	/*	if (i == 1) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		if (i == 2) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		if (i == 3) rotate(vector.begin(), vector.begin() + 4, vector.end());
 		if (i == 4) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		if (i == 5) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		if (i == 6) rotate(vector.begin(), vector.begin() + 4, vector.end());
 		if (i == 7) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 8) rotate(vector.begin(), vector.begin() + 3, vector.end());
+		if (i == 8) rotate(vector.begin(), vector.begin() + 3, vector.end());*/
 		for (int j{ 0 }, v{ 0 }; j < SIZE; j++, v++, k++) {
 			sudokuLogic[i][j] = vector[v];
 			sudokuView[i][j] = 0;
@@ -39,6 +43,18 @@ SudokuEngine::SudokuEngine()
 			numberCursorMouse[i][j] = k;
 		}
 	}
+}
+SudokuEngine::~SudokuEngine()
+{
+	delete[]sudokuLogic[0];
+	delete[]sudokuView[0];
+	delete[]sudokuPlayer[0];
+	delete[]numberCursorMouse[0];
+	delete[]sudokuLogic;
+	delete[]sudokuView;
+	delete[]sudokuPlayer;
+	delete[]numberCursorMouse;
+	std::cout << "Destroy";
 }
 void SudokuEngine::transposing() {
 
@@ -93,15 +109,30 @@ void SudokuEngine::gameRandom() {
 			sudokuView[i][j] = sudokuLogic[i][j];
 }
 
-bool SudokuEngine::CheckStep() {
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE; j++) {
-			if (sudokuView[i][j] == 0) {
-				return true;
+bool SudokuEngine::CheckWin()
+{
+	for (int i = 0; i < SIZE; i++) 
+	{
+		for (int j = 0; j < SIZE; j++) 
+		{
+			if (sudokuView[i][j] != sudokuLogic[i][j]) 
+			{
+				return false;
 			}
 		}
 	}
-	return false;
+	return true;
+}
+bool SudokuEngine::checkFull()
+{
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+			if (sudokuView[i][j] == 0) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 void SudokuEngine::setDifficulty(int difficulty)
 {
@@ -115,27 +146,24 @@ void SudokuEngine::setDifficulty(int difficulty)
 		amount = 3;
 		break;
 	case 2:
-		amount = 5;
-		break;
-	default:
-		amount = 2;
+		amount = 4;
 		break;
 	}
 	int numberCells = SIZE * SIZE;
 	int deleted = numberCells - numberCells / amount;
 	int row = rand() % SIZE;
-	int column = rand() % SIZE;
+	int col = rand() % SIZE;
 	for (int i = 0; i < deleted; i++)
 	{
-		if (sudokuView[row][column] > 0)
+		if (sudokuView[row][col] > 0)
 		{
-			sudokuView[row][column] = 0;
-			sudokuPlayer[row][column] = false;
+			sudokuView[row][col] = 0;
+			sudokuPlayer[row][col] = false;
 		}
 		else
 		{
 			row = rand() % SIZE;
-			column = rand() % SIZE;
+			col = rand() % SIZE;
 			i--;
 		}
 	}
@@ -165,13 +193,13 @@ bool SudokuEngine::checkColumn(int col, int value) {
 }
 bool SudokuEngine::checkSquare(int row, int col, int value) {
 	int quadx = 3, quady = 3;
-	int sizey = row / quady;
-	int sizex = col / quadx;
-	sizey *= quady;
-	sizex *= quadx;
-	for (int i = sizey; i < sizey + quady; i++)
+	int checkRow = row / quady;
+	int checkCol = col / quadx;
+	checkRow *= quady;
+	checkCol *= quadx;
+	for (int i = checkRow; i < checkRow + quady; i++)
 	{
-		for (int j = sizex; j < sizex + quadx; j++)
+		for (int j = checkCol; j < checkCol + quadx; j++)
 		{
 			if (sudokuView[i][j] == value)
 			{
@@ -220,7 +248,7 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 			}
 			if (j == positionCursor % SIZE && i == positionCursor / SIZE)
 			{
-				smallSquare.setFillColor(Color(0, 255, 80, 210));
+				smallSquare.setFillColor(Color(0, 255, 0, 150));
 			}
 			smallSquare.setPosition(cellSize + j * cellSize, cellSize + i * cellSize);
 			window.draw(smallSquare);
@@ -229,14 +257,12 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 			cellText.setPosition(cellSize + j * cellSize + fontSize/2, cellSize + i * cellSize + fontSize/2);
 			if (sudokuPlayer[i][j])
 			{
-				cellText.setFillColor(Color::Black);
+				cellText.setFillColor(Color::Black); // Öגוע מעמבנאזאולמי צטפנû
 			}
 			else
 			{
-				cellText.setFillColor(Color::Blue);
+				cellText.setFillColor(Color::Blue); // Öגוע צטפנ ןמכüחמגאעוכÿ
 			}
-
-
 			window.draw(cellText);
 		}
 	}
@@ -256,9 +282,6 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 
 bool SudokuEngine::runEngine(RenderWindow& window, int difficulty)
 {
-	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("Background.jpg");
-	Sprite background(backgroundTexture);
 	gameRandom();
 	setDifficulty(difficulty);
 	while (window.isOpen())
@@ -270,31 +293,20 @@ bool SudokuEngine::runEngine(RenderWindow& window, int difficulty)
 		while (window.pollEvent(event) && engineState == EngineState::GAME)
 		{
 			if (event.type == Event::Closed) {
-				delete[]sudokuLogic[0];
-				delete[]sudokuView[0];
-				delete[]sudokuPlayer[0];
 				window.close();
 			}
-
-			if (event.type == Event::KeyPressed) {
+			if (event.type == Event::KeyPressed || event.type == Event::MouseButtonPressed) {
 
 				if ((Keyboard::isKeyPressed(Keyboard::Escape)))
 				{
-					delete[]sudokuLogic[0];
-					delete[]sudokuView[0];
-					delete[]sudokuPlayer[0];
 					return false;
 				}
-				selectCell();
-			}
-			if (event.type == Event::MouseButtonPressed) {
 				selectCell();
 			}
 		}
 		window.clear();
 		window.draw(background);
 		drawSquare(window);
-		
 		window.display();
 	}
 	return true;
@@ -326,7 +338,6 @@ void SudokuEngine::selectCell()
 			positionCursor = ((SIZE * SIZE)) - SIZE + ((positionCursor + SIZE) % SIZE);
 		}
 	}
-
 	if (Keyboard::isKeyPressed(Keyboard::Down))
 	{
 		positionCursor += SIZE;
