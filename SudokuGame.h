@@ -3,13 +3,13 @@
 #include <iostream>
 #include<time.h>
 #include<Windows.h>
-#include "SudookuEngine.h"
+#include "SudokuEngine.h"
 #define SIZE_H 1920 // Разрешение окна по горизонтали
 #define SIZE_V 1080 // Разрешение окна по вертикали
 
 using namespace sf;
 
-enum class GameState { MENU, GAME, END , DEVELOPER}; // Статусы игры
+enum class GameState { MENU, GAME, END, DEVELOPER}; // Статусы игры
 
 class SudokuGame
 {
@@ -29,6 +29,8 @@ public:
 
 
 };
+
+
 
 
 

@@ -5,7 +5,7 @@
 #define SIZE 9 // Размер поля
 using namespace sf;
 
-enum class EngineState {GAME, GAMEOVER, WIN}; // Статусы игры
+enum class EngineState {GAME, GAMEOVER}; // Статусы игры
 
 class SudokuEngine {
 private:
@@ -42,5 +42,7 @@ private:
 	void gameRandom(); // Перемешивание поля
 	void flipGorizontaly(); // Отажение по горизонтали
 	void flipVerticaly(); // Отражение по вертикали
+	void drawCheckFullField(RenderWindow& window);
+	bool gameover(RenderWindow& window);
 };
 

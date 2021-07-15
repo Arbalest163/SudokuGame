@@ -124,6 +124,8 @@ void SudokuGame::developer()
 	}
 }
 
+
+
 void SudokuGame::levels()
 {
 	//window.setFramerateLimit(60); // Ограничение частоты кадров монитора
