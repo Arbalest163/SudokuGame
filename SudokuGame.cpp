@@ -6,7 +6,7 @@
 
 SudokuGame::SudokuGame()
 {
-	window.create(VideoMode(SIZE_H, SIZE_V), L"Судоку"), Style::Close);
+	window.create(VideoMode(SIZE_H, SIZE_V), L"Судоку", Style::Close);
 	font.loadFromFile("Black-Acute.ttf");
 	state = GameState::MENU;
 	backgroundTexture.loadFromFile("Background.jpg");
