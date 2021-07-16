@@ -28,14 +28,6 @@ SudokuEngine::SudokuEngine()
 	for (int i{ 0 },k{0}; i < SIZE; ++i) {
 		if (i % 3 > 0) rotate(vector.begin(), vector.begin() + 3, vector.end());
 		if (!(i % 3)) rotate(vector.begin(), vector.begin() + 4, vector.end());
-	/*	if (i == 1) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 2) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 3) rotate(vector.begin(), vector.begin() + 4, vector.end());
-		if (i == 4) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 5) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 6) rotate(vector.begin(), vector.begin() + 4, vector.end());
-		if (i == 7) rotate(vector.begin(), vector.begin() + 3, vector.end());
-		if (i == 8) rotate(vector.begin(), vector.begin() + 3, vector.end());*/
 		for (int j{ 0 }, v{ 0 }; j < SIZE; j++, v++, k++) {
 			sudokuLogic[i][j] = vector[v];
 			sudokuView[i][j] = 0;
@@ -54,7 +46,7 @@ SudokuEngine::~SudokuEngine()
 	delete[]sudokuView;
 	delete[]sudokuPlayer;
 	delete[]numberCursorMouse;
-	std::cout << "Destroy";
+	std::cout << "Destroy"; // Проверка корректности удаления объекта
 }
 void SudokuEngine::transposing() {
 
@@ -153,7 +145,7 @@ void SudokuEngine::setDifficulty(int difficulty)
 		break;
 	}
 	int numberCells = SIZE * SIZE;
-	int deleted = numberCells - numberCells / amount;
+	int deleted = numberCells - numberCells / amount; // Количество удаляемых цифр
 	int row = rand() % SIZE;
 	int col = rand() % SIZE;
 	for (int i = 0; i < deleted; i++)
@@ -187,7 +179,7 @@ bool SudokuEngine::checkColumn(int col, int value) {
 
 	for (int i = 0; i < SIZE; i++)
 	{
-		if (sudokuView[col][i] == value)
+		if (sudokuView[i][col] == value)
 		{
 			return false;
 		}
@@ -227,6 +219,7 @@ void SudokuEngine::drawSquare(RenderWindow& window)
 {
 	int quadx = 3, quady = 3; // Количство ячеек в квадрате
 	Text cellText("", font, fontSize);
+
 	RectangleShape mediumSquare; // Средняя ячейка
 	mediumSquare.setSize(Vector2f(cellSize * quadx, cellSize * quady));
 	mediumSquare.setOutlineThickness(5);
@@ -301,7 +294,7 @@ bool SudokuEngine::runEngine(RenderWindow& window, int difficulty)
 	{
 		Event event;
 		posMouse = Mouse::getPosition(window);
-		//std::cout << posMouse.x / cellSize << "  " << posMouse.y / cellSize << std::endl;
+		//std::cout << posMouse.x / cellSize << "  " << posMouse.y / cellSize << std::endl; // Отладка координат
 		window.clear();
 		window.draw(background);
 		while (window.pollEvent(event))
@@ -318,7 +311,7 @@ bool SudokuEngine::runEngine(RenderWindow& window, int difficulty)
 		if(engineState == EngineState::GAME)
 		{ 
 			drawSquare(window);
-			drawCheckFullField(window);
+			drawButtonCheckFullField(window);
 		}
 		if (engineState == EngineState::GAMEOVER)
 		{
@@ -329,20 +322,20 @@ bool SudokuEngine::runEngine(RenderWindow& window, int difficulty)
 	return true;
 }
 
-void SudokuEngine::drawCheckFullField(RenderWindow& window)
+void SudokuEngine::drawButtonCheckFullField(RenderWindow& window)
 {
 	Vector2f mouse(Mouse::getPosition(window));
-	Text stringCheck(L"Проверить", font, 80);
-	stringCheck.setPosition(SIZE_H / 2 + 100, cellSize);
+	Text buttonCheck(L"Проверить", font, 80);
+	buttonCheck.setPosition(SIZE_H / 2 + 100, cellSize);
 
-	if (stringCheck.getGlobalBounds().contains(mouse) && checkFull()) {
-		stringCheck.setFillColor(Color::Red);
+	if (buttonCheck.getGlobalBounds().contains(mouse) && checkFull()) {
+		buttonCheck.setFillColor(Color::Red);
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			engineState = EngineState::GAMEOVER;
 		}
 	}
-	else stringCheck.setFillColor(Color::White);
-	window.draw(stringCheck);
+	else buttonCheck.setFillColor(Color::White);
+	window.draw(buttonCheck);
 }
 
 bool SudokuEngine::gameover(RenderWindow& window)
@@ -386,7 +379,6 @@ bool SudokuEngine::gameover(RenderWindow& window)
 			if (event.type == Event::Closed) {
 				window.close();
 			}
-
 			if ((Keyboard::isKeyPressed(Keyboard::Escape)))
 			{
 				return false;
@@ -395,15 +387,11 @@ bool SudokuEngine::gameover(RenderWindow& window)
 			{
 				return false;
 			}
-
 		}
 		window.display();
-
 	}
 	return true;
 }
-
-
 
 void SudokuEngine::selectCell()
 {
@@ -459,10 +447,10 @@ void SudokuEngine::selectCell()
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num1) || Keyboard::isKeyPressed(Keyboard::Numpad1))
 		{
-			//if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 1))
-			//{
+			if (checkCorrectInput(positionCursor / SIZE, positionCursor % SIZE, 1))
+			{
 				sudokuView[positionCursor / SIZE][positionCursor % SIZE] = 1;
-			//}
+			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num2) || Keyboard::isKeyPressed(Keyboard::Numpad2))
 		{

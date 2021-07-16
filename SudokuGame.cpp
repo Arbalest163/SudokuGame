@@ -1,11 +1,12 @@
 ﻿#include "SudokuGame.h"
 
 
-RenderWindow window(VideoMode(SIZE_H, SIZE_V), "Sudoku", Style::Close);
+
 
 
 SudokuGame::SudokuGame()
 {
+	window.create(VideoMode(SIZE_H, SIZE_V), L"Судоку"), Style::Close);
 	font.loadFromFile("Black-Acute.ttf");
 	state = GameState::MENU;
 	backgroundTexture.loadFromFile("Background.jpg");
@@ -60,20 +61,6 @@ void SudokuGame::mainMenu()
 				}
 
 			}
-			// Проверить цикл выше и удалить лишнее снизу, если всё работает
-
-			/*else if (textMenu[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::GAME;
-			}
-			else if (textMenu[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::END;
-			}
-			else if (textMenu[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				state = GameState::DEVELOPER;
-			}*/
 		}
 		window.display();
 	}
@@ -123,8 +110,6 @@ void SudokuGame::developer()
 		window.display();
 	}
 }
-
-
 
 void SudokuGame::levels()
 {
@@ -183,34 +168,6 @@ void SudokuGame::levels()
 				}
 
 			}
-			// Проверить цикл выше и удалить лишнее, если все нормально
-
-			/*if (text[0].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 0))
-					state = GameState::END;
-				else
-					state = GameState::MENU;
-			}
-			else if (text[1].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 1))
-					state = GameState::END;
-				else
-					state = GameState::MENU;
-			}
-			else if (text[2].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased && event.key.code == Mouse::Left)
-			{
-				if (engine.runEngine(window, 2))
-					state = GameState::END;
-				else
-					state = GameState::MENU;
-			}
-			else if (text[3].getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased 
-					&& event.key.code == Mouse::Left || Keyboard::isKeyPressed(Keyboard::Escape))
-			{
-				state = GameState::MENU;
-			}*/
 		}
 		window.display(); // Отображение всего, что было отрисовано в процессе работы цикла
 	}

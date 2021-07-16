@@ -23,6 +23,7 @@ private:
 	void developer(); // Меню с разработчиком
 
 public:
+	RenderWindow window;
 	SudokuGame(); // Конструктор
 	~SudokuGame(); // Дестурктор
 	void runGame(); // Запуск игры

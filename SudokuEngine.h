@@ -25,24 +25,24 @@ private:
 public:
 	SudokuEngine(); // Конструктор поля
 	~SudokuEngine(); // Деструктор поля
-	bool CheckWin(); // Проверка победы
-	bool checkFull();// Проверка заполненсти поля
-	void setDifficulty(int difficulty); // установка сложности игры
 	bool runEngine(RenderWindow& window, int difficulty); // Запуск движка игры
+private:
 	void drawSquare(RenderWindow& window); // Отрисовка поля
 	void selectCell(); // Выбор ячейки и ввод цифр
 	bool checkRow(int row, int value); // проверка строки
 	bool checkColumn(int col, int value); // проверка колонки
 	bool checkSquare(int row, int col, int value); // проверка квадрата
 	bool checkCorrectInput(int row, int col, int value); // Проверка корректности воода
-private:
+	bool CheckWin(); // Проверка победы
+	bool checkFull();// Проверка заполненсти поля
+	void setDifficulty(int difficulty); // установка сложности игры
 	void transposing(); // транспонирование поля
 	void swapColumn(); // смена колонок в пределах одной группы
 	void swapRow(); // Смена строк в пределах одной группы
 	void gameRandom(); // Перемешивание поля
 	void flipGorizontaly(); // Отажение по горизонтали
 	void flipVerticaly(); // Отражение по вертикали
-	void drawCheckFullField(RenderWindow& window);
-	bool gameover(RenderWindow& window);
+	void drawButtonCheckFullField(RenderWindow& window); // Кнопка проверки
+	bool gameover(RenderWindow& window); // Меню завершения игры
 };
 
